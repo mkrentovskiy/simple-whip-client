@@ -735,6 +735,7 @@ static void whip_connect(GstWebRTCSessionDescription *offer) {
 	whip_http_session session = { 0 };
 	guint status = whip_http_send(&session, "POST", (char *)server_url, sdp_offer, "application/sdp");
 	g_free(sdp_offer);
+
 	if(status != 201) {
 		/* Didn't get the success we were expecting */
 		WHIP_LOG(LOG_ERR, " [%u] %s\n", status, status ? soup_message_get_reason_phrase(session.msg) : "HTTP error");
@@ -878,7 +879,6 @@ static void whip_connect(GstWebRTCSessionDescription *offer) {
 	ret = gst_sdp_message_parse_buffer((guint8 *)answer, strlen(answer), sdp);
 
 	g_object_unref(session.msg);
-	g_object_unref(session.reply_body);
 	g_object_unref(session.http_conn);
 
 	if(ret != GST_SDP_OK) {
